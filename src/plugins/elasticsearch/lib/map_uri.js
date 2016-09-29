@@ -13,6 +13,8 @@ export default function mapUri(server, prefix) {
       if (/\/$/.test(url)) url = url.substring(0, url.length - 1);
       url += path;
     }
+    // Change .kibana index
+    url = url.replace('.kibana', config.get('kibana.index'));
     const query = querystring.stringify(request.query);
     if (query) url += '?' + query;
     // We want the host of elasticsearch rather than of Kibana

@@ -45,8 +45,6 @@ module.exports = function ({ Plugin }) {
     },
 
     init(server, options) {
-      const kibanaIndex = server.config().get('kibana.index');
-
       // Expose the client to the server
       exposeClient(server);
       createProxy(server, 'GET', '/{paths*}');
@@ -66,6 +64,7 @@ module.exports = function ({ Plugin }) {
       }
 
       function noDirectIndex({ path }, reply) {
+        const kibanaIndex = server.config().get('kibana.index');
         const requestPath = trimRight(trim(path), '/');
         const matchPath = createPath(kibanaIndex);
 
@@ -84,7 +83,7 @@ module.exports = function ({ Plugin }) {
       createProxy(
         server,
         ['PUT', 'POST', 'DELETE'],
-        `/${kibanaIndex}/{paths*}`,
+        '/{index}/{paths*}',
         {
           pre: [ noDirectIndex, noBulkCheck ]
         }
